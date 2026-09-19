@@ -4,7 +4,7 @@
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-19 23:01:53
+ * :date last edited: 2026-09-19 23:18:31
  */
 /*
  * main.c — 51 单片机入门程序:LED 流水灯
@@ -20,32 +20,11 @@
 #include <8052.h> /* SDCC 自带的 8052 内核寄存器定义(P0/P1/P2/P3...) */
 #include <REGX52.H>
 #include <INTRINS_H>
+#include "Delay.h"
 #define LED_PORT P1 /* LED 所在端口,板子不同可改成 P2 / P0 */
 
 unsigned char NexieTable[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x7D, 0x7F, 0x7F, 0x6};
 
-void Delay(unsigned int ms)
-{
-  unsigned char i, j, k;
-  _nop_();
-  while (ms--)
-  {
-
-    i = 4;
-    j = 205;
-    k = 187;
-
-    do
-    {
-      do
-      {
-        while (--k)
-          ;
-
-      } while (--j);
-    } while (--i);
-  }
-}
 
 void Nexie(unsigned char location, unsigned char number)
 {
@@ -101,9 +80,7 @@ void main(void)
 {
   while (1)
   {
-    // Delay(200);
     Nexie(1, 1);
-    // Delay(200);
     Nexie(2, 2);
     Nexie(3, 3);
   }

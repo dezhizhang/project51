@@ -32,6 +32,7 @@ PYBIN  := $(if $(STCGAL),$(dir $(STCGAL))python3,python3)   # 和 stcgal 同目�
 MON_BAUD ?= 9600
 
 SRC := $(wildcard *.c)
+OBJ := $(SRC:%.c=$(BUILD)/%.rel)
 
 .PHONY: all flash run monitor clean help
 
@@ -41,9 +42,13 @@ all: $(HEX)
 $(BUILD):
 	mkdir -p $(BUILD)
 
-# SDCC 编译 + 链接,-o 以 / 结尾表示输出目录
-$(IHX): $(SRC) | $(BUILD)
-	$(CC) $(CFLAGS) -o $(BUILD)/ $(SRC)
+# SDCC 一次只能编译一个源文件:先各自编译成 .rel(-c),再统一链接
+$(BUILD)/%.rel: %.c | $(BUILD)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# 链接所有 .rel 生成 .ihx(显式指定输出名,否则会按第一个 .rel 命名)
+$(IHX): $(OBJ) | $(BUILD)
+	$(CC) $(CFLAGS) -o $(IHX) $(OBJ)
 
 # 把 SDCC 的 ihx 转成标准 Intel HEX(烧录工具通吃这个格式)
 $(HEX): $(IHX)

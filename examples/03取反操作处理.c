@@ -1,10 +1,10 @@
 /*
  * :file description:
- * :name: /project51/main.c
+ * :name: /project51/examples/03取反操作处理.c
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-19 21:12:54
+ * :date last edited: 2026-09-19 21:13:42
  */
 /*
  * main.c — 51 单片机入门程序:LED 流水灯

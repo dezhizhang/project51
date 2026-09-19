@@ -1,0 +1,7 @@
+{
+  // 本项目 C 智能提示统一用 MS C/C++ 插件(若装了 clangd 请在本工作区禁用,避免双引擎重复报错)
+  "clangd.enable": false,
+
+  // 文件保存时自动格式化用内置格式化器(可选)
+  "editor.formatOnSave": false
+}

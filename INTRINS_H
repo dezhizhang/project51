@@ -1,0 +1,9 @@
+/*
+ * INTRINS_H — 桥接文件
+ * 教程里 #include <INTRINS_H>(下划线写法)重定向到本项目的 intrins.h。
+ * <INTRINS.H> / <intrins.h> 等写法 macOS 文件系统大小写不敏感,自动匹配 intrins.h。
+ */
+#ifndef __INTRINS_H_BRIDGE__
+#define __INTRINS_H_BRIDGE__
+#include "intrins.h"
+#endif

@@ -4,7 +4,7 @@
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-20 05:37:14
+ * :date last edited: 2026-09-20 06:48:09
  */
 /*
  * main.c — LCD1602 显示测试
@@ -14,14 +14,21 @@
  */
 
 #include "LCD1602.h"
+#include "MatrixKey.h"
 
-
-void main(void) {
+unsigned char KeyNum;
+void main(void)
+{
   LCD_Init();
-  LCD_ShowString(1,1,"hello world");
-  LCD_ShowChar(2,1,'A');
 
-  while (1) {
+  while (1)
+  {
     /* LCD 会保持显示,无需反复清屏或重写。 */
+    KeyNum = MatrixKey();
+
+    if (KeyNum)
+    {
+      LCD_ShowNum(2, 1, KeyNum,2);
+    }
   }
 }

@@ -1,0 +1,7 @@
+-std=c99
+-I.
+-I/opt/homebrew/share/sdcc/include
+-I/opt/homebrew/share/sdcc/include/mcs51
+-include
+/Users/zhangdezhi/Documents/embedded/project51/.vscode/sdcc_intellisense.h
+-Dmain=sdcc_main

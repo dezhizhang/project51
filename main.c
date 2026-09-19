@@ -4,7 +4,7 @@
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-19 17:31:43
+ * :date last edited: 2026-09-19 17:56:28
  */
 /*
  * main.c — 51 单片机入门程序:LED 流水灯
@@ -22,13 +22,18 @@
 #include <INTRINS_H>
 #define LED_PORT P1 /* LED 所在端口,板子不同可改成 P2 / P0 */
 
-
-void main() {
-    while(1){
-      if(P3_1 == 0) {
-        P2_0=0;
-      }else {
-        P2_0=1;
-      }
+int main()
+{
+  while (1)
+  {
+    if (P3_1 == 0 && P3_0 == 0)
+    {
+      P2_0 = 0;
     }
+    else
+    {
+      P2_0 = 1;
+    }
+  }
+  return 0;
 }

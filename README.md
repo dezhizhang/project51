@@ -82,6 +82,14 @@ make clean
 
 ## 常见问题
 
+**VS Code 报「无法打开源文件 8052.h / 未定义标识符 P3_1」**
+不是缺插件,是编辑器的 C 分析引擎缺配置。本项目已带全套配置:
+- `.vscode/c_cpp_properties.json` + `.vscode/sdcc_intellisense.h` —— 给 MS C/C++ 插件
+- `compile_flags.txt` —— 给 clangd(若安装)
+配置生效需重载窗口:Cmd+Shift+P → 「Reload Window」。
+建议只保留一个 C 引擎(推荐 MS C/C++,扩展面板禁用 clangd),避免双重报错。
+红线从不影响编译,终端 `make` 才是真相。
+
 **`make: stcgal: No such file or directory`**
 stcgal 装在 anaconda 目录,老终端窗口的 PATH 没刷新。新开一个终端窗口,或执行 `source ~/.zshrc`。
 (Makefile 已做兜底,多数情况会自动找到 stcgal,不用管这条。)

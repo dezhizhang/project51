@@ -1,10 +1,10 @@
 /*
  * :file description:
- * :name: /project51/main.c
+ * :name: /project51/examples/04独立按键按制.c
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-19 22:53:28
+ * :date last edited: 2026-09-19 21:35:30
  */
 /*
  * main.c — 51 单片机入门程序:LED 流水灯
@@ -22,61 +22,40 @@
 #include <INTRINS_H>
 #define LED_PORT P1 /* LED 所在端口,板子不同可改成 P2 / P0 */
 
-
-unsigned char NexieTable[] = {0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x7D,0x7F,0x7F,0x6};
-
-void Nexie(unsigned char location, unsigned char number)
+void Delay(unsigned int ms)
 {
-  switch (location)
+  unsigned char i, j, k;
+  _nop_();
+  while (ms--)
   {
-  case 1:
-    P2_4 = 1;
-    P2_3 = 1;
-    P2_2 = 1;
-    break;
-  case 2:
-    P2_4 = 1;
-    P2_3 = 1;
-    P2_2 = 0;
-    break;
-  case 3:
-    P2_4 = 1;
-    P2_3 = 0;
-    P2_2 = 1;
-    break;
-  case 4:
-    P2_4 = 1;
-    P2_3 = 0;
-    P2_2 = 1;
-    break;
-  case 5:
-    P2_4 = 0;
-    P2_3 = 1;
-    P2_2 = 1;
-    break;
-  case 6:
-    P2_4 = 0;
-    P2_3 = 1;
-    P2_2 = 0;
-    break;
-  case 7:
-    P2_4 = 0;
-    P2_3 = 0;
-    P2_2 = 1;
-    break;
-  case 8:
-    P2_4 = 0;
-    P2_3 = 0;
-    P2_2 = 0;
-    break;
+
+    i = 4;
+    j = 205;
+    k = 187;
+
+    do
+    {
+      do
+      {
+        while (--k);
+
+      } while (--j);
+    } while (--i);
   }
-  P0 = NexieTable[number];
 }
 
 void main(void)
 {
+  unsigned char led_num = 0;
   while (1)
   {
-   Nexie(7,8);
+    if (P3_1 == 0)
+    {
+      Delay(20);
+      while (P3_1 == 0);
+      Delay(20);
+      led_num++;
+      P2 = ~led_num;
+    }
   }
 }

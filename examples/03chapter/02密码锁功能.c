@@ -1,10 +1,10 @@
 /*
  * :file description:
- * :name: /project51/main.c
+ * :name: /project51/examples/03chapter/02密码锁功能.c
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-20 07:22:25
+ * :date last edited: 2026-09-20 07:24:02
  */
 /*
  * main.c — LCD1602 显示测试

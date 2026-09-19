@@ -1,10 +1,10 @@
 /*
  * :file description:
- * :name: /project51/main.c
+ * :name: /project51/examples/03chapter/01矩阵建盘.c
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-20 07:22:25
+ * :date last edited: 2026-09-20 07:07:32
  */
 /*
  * main.c — LCD1602 显示测试
@@ -17,7 +17,6 @@
 #include "MatrixKey.h"
 
 unsigned char KeyNum;
-unsigned int Password, Count;
 void main(void)
 {
   LCD_Init();
@@ -29,29 +28,7 @@ void main(void)
 
     if (KeyNum)
     {
-      if (KeyNum <= 10 && Count < 4)
-      {
-        Password *= 10;
-        Password += KeyNum % 10;
-        Count++;
-      }
-      LCD_ShowNum(2, 1, Password, 4);
-    }
-
-    if (KeyNum == 11)
-    {
-      if (Password == 1234)
-      {
-        LCD_ShowString(1, 14, "ok");
-        Password = 0;
-        Count = 0;
-      }
-      else
-      {
-        LCD_ShowString(1, 14, "error");
-        Password = 0;
-        Count = 0;
-      }
+      LCD_ShowNum(2, 1, KeyNum,2);
     }
   }
 }

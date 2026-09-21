@@ -4,54 +4,51 @@
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-20 07:22:25
+ * :date last edited: 2026-09-21 23:12:52
  */
 /*
- * main.c — LCD1602 显示测试
+ * main.c — LED 呼吸灯(软件 PWM:渐亮 + 渐暗)
  *
  * 目标芯片: STC89C52RC, 11.0592 / 12 MHz, 12T 模式。
  * LCD 接线见 LCD1602.c 的引脚配置,必须与实际硬件一致。
  */
 
-#include "LCD1602.h"
-#include "MatrixKey.h"
+#include <REGX52.H>
 
-unsigned char KeyNum;
-unsigned int Password, Count;
+/* SDCC 不支持 Keil 的 sbit RCK=P3^5; 专有语法,直接用内置位名 */
+#define LED P2_0
+// #define SCK P3_6
+// #define SER P3_4
+
+void Delay(unsigned int t)
+{
+  while (t--);
+}
+
 void main(void)
 {
-  LCD_Init();
-
+  unsigned char Time, i;
   while (1)
   {
-    /* LCD 会保持显示,无需反复清屏或重写。 */
-    KeyNum = MatrixKey();
-
-    if (KeyNum)
+    for (Time = 0; Time < 100; Time++)
     {
-      if (KeyNum <= 10 && Count < 4)
+      for (i = 0; i < 20; i++)
       {
-        Password *= 10;
-        Password += KeyNum % 10;
-        Count++;
+        LED = 0;
+        Delay(Time);
+        LED = 1;
+        Delay(100 - Time);
       }
-      LCD_ShowNum(2, 1, Password, 4);
     }
 
-    if (KeyNum == 11)
-    {
-      if (Password == 1234)
-      {
-        LCD_ShowString(1, 14, "ok");
-        Password = 0;
-        Count = 0;
-      }
-      else
-      {
-        LCD_ShowString(1, 14, "error");
-        Password = 0;
-        Count = 0;
+    for(Time=100;Time > 0;Time--) {
+      for(i=0;i < 20;i++) {
+         LED = 0;
+        Delay(Time);
+        LED = 1;
+        Delay(100 - Time);
       }
     }
+
   }
 }

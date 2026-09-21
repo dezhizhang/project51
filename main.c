@@ -4,7 +4,7 @@
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-21 23:12:52
+ * :date last edited: 2026-09-22 05:48:05
  */
 /*
  * main.c — LED 呼吸灯(软件 PWM:渐亮 + 渐暗)
@@ -14,41 +14,21 @@
  */
 
 #include <REGX52.H>
+#include "LCD1602.h"
+#include "DS1302.h"
 
-/* SDCC 不支持 Keil 的 sbit RCK=P3^5; 专有语法,直接用内置位名 */
-#define LED P2_0
-// #define SCK P3_6
-// #define SER P3_4
+unsigned char Second;
 
-void Delay(unsigned int t)
+int main()
 {
-  while (t--);
-}
+  LCD_Init();
+  DS1302_Init();
+  LCD_ShowString(1, 1, "RTC");
+  DS1302_WriteByte(0x80, 0x03);
 
-void main(void)
-{
-  unsigned char Time, i;
   while (1)
   {
-    for (Time = 0; Time < 100; Time++)
-    {
-      for (i = 0; i < 20; i++)
-      {
-        LED = 0;
-        Delay(Time);
-        LED = 1;
-        Delay(100 - Time);
-      }
-    }
-
-    for(Time=100;Time > 0;Time--) {
-      for(i=0;i < 20;i++) {
-         LED = 0;
-        Delay(Time);
-        LED = 1;
-        Delay(100 - Time);
-      }
-    }
-
+    Second = DS1302_ReadByte(0x81);
+    LCD_ShowNum(2, 1, Second, 3);
   }
 }

@@ -4,7 +4,7 @@
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-22 23:24:28
+ * :date last edited: 2026-09-23 06:15:46
  */
 /*
  * main.c — LED 呼吸灯(软件 PWM:渐亮 + 渐暗)
@@ -15,8 +15,17 @@
 
 #include <REGX52.H>
 #include "LCD1602.h"
+#include "XPT2046.h"
 
-int main()
+unsigned int ADValue;
+
+void main()
 {
- 
+    LCD_Init();
+    LCD_ShowString(1, 1, "ADJ");
+    while (1)
+    {
+        ADValue = XPT2046_ReadAD(XPT2046_XP);
+        LCD_ShowNum(2,1,ADValue,4);
+    }
 }

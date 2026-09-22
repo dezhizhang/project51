@@ -4,7 +4,7 @@
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-22 22:40:42
+ * :date last edited: 2026-09-22 23:24:28
  */
 /*
  * main.c — LED 呼吸灯(软件 PWM:渐亮 + 渐暗)
@@ -16,14 +16,7 @@
 #include <REGX52.H>
 #include "LCD1602.h"
 
-unsigned char Second;
-
 int main()
 {
-  LCD_Init();
-  LCD_ShowChar(2,3,'A');
-  LCD_ShowString(1,3,"Hello");
-  while(1) {
-    
-  }
+ 
 }

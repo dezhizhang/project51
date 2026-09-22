@@ -1,10 +1,10 @@
 /*
- * :file description: 
+ * :file description:
  * :name: /project51/LCD1602.c
  * :author: 张德志
  * :date created: 2026-09-22 21:42:28
  * :last editor: 张德志
- * :date last edited: 2026-09-22 22:41:47
+ * :date last edited: 2026-09-22 23:14:46
  */
 #include <REGX52.H>
 #include "LCD1602.h"
@@ -161,6 +161,7 @@ void LCD_ShowString(unsigned char Line, unsigned char Column, char *String)
 /**
  * @brief  返回值=X的Y次方
  */
+
 int LCD_Pow(int X, int Y)
 {
 	unsigned char i;
@@ -198,11 +199,30 @@ void LCD_ShowNum(unsigned char Line, unsigned char Column, unsigned int Number, 
  * @param  Length 要显示数字的长度，范围：1~5
  * @retval 无
  */
+// void LCD_ShowSignedNum(unsigned char Line, unsigned char Column, int Number, unsigned char Length)
+// {
+// 	unsigned char i;
+// 	unsigned int Number1;
+// 	LCD_SetCursor(Line, Column);
+// 	if (Number >= 0)
+// 	{
+// 		LCD_WriteData('+');
+// 		Number1 = Number;
+// 	}
+// 	else
+// 	{
+// 		LCD_WriteData('-');
+// 		Number1 = -Number;
+// 	}
+//
+// }
+
 void LCD_ShowSignedNum(unsigned char Line, unsigned char Column, int Number, unsigned char Length)
 {
 	unsigned char i;
 	unsigned int Number1;
 	LCD_SetCursor(Line, Column);
+
 	if (Number >= 0)
 	{
 		LCD_WriteData('+');
@@ -213,6 +233,7 @@ void LCD_ShowSignedNum(unsigned char Line, unsigned char Column, int Number, uns
 		LCD_WriteData('-');
 		Number1 = -Number;
 	}
+
 	for (i = Length; i > 0; i--)
 	{
 		LCD_WriteData(Number1 / LCD_Pow(10, i - 1) % 10 + '0');
@@ -227,6 +248,7 @@ void LCD_ShowSignedNum(unsigned char Line, unsigned char Column, int Number, uns
  * @param  Length 要显示数字的长度，范围：1~4
  * @retval 无
  */
+
 void LCD_ShowHexNum(unsigned char Line, unsigned char Column, unsigned int Number, unsigned char Length)
 {
 	unsigned char i, SingleNumber;

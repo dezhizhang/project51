@@ -1,10 +1,10 @@
 /*
  * :file description: 
- * :name: /project51/LCD1602.h
+ * :name: /project51/examples/01chapter/LCD1602.h
  * :author: 张德志
  * :date created: 2026-09-20 05:00:56
  * :last editor: 张德志
- * :date last edited: 2026-09-22 22:26:46
+ * :date last edited: 2026-09-22 21:54:22
  */
 /*
  * LCD1602.h — LCD1602 液晶显示模块对外接口

@@ -4,7 +4,7 @@
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-09-22 05:48:05
+ * :date last edited: 2026-09-22 22:18:13
  */
 /*
  * main.c — LED 呼吸灯(软件 PWM:渐亮 + 渐暗)
@@ -15,20 +15,14 @@
 
 #include <REGX52.H>
 #include "LCD1602.h"
-#include "DS1302.h"
 
 unsigned char Second;
 
 int main()
 {
   LCD_Init();
-  DS1302_Init();
-  LCD_ShowString(1, 1, "RTC");
-  DS1302_WriteByte(0x80, 0x03);
-
-  while (1)
-  {
-    Second = DS1302_ReadByte(0x81);
-    LCD_ShowNum(2, 1, Second, 3);
+  LCD_ShowChar(2,3,'A');
+  while(1) {
+    
   }
 }

@@ -1,19 +1,27 @@
+/*
+ * :file description: 
+ * :name: /project51/LCD1602.c
+ * :author: 张德志
+ * :date created: 2026-09-22 21:42:28
+ * :last editor: 张德志
+ * :date last edited: 2026-09-22 22:41:47
+ */
 #include <REGX52.H>
 #include "LCD1602.h"
 
-//引脚配置：
-//Keil 的 sbit LCD_RS=P2^6; 是专有语法,SDCC 用内置位名 P2_6 代替
+// 引脚配置：
+// Keil 的 sbit LCD_RS=P2^6; 是专有语法,SDCC 用内置位名 P2_6 代替
 #define LCD_RS P2_6
 #define LCD_RW P2_5
 #define LCD_EN P2_7
 #define LCD_DataPort P0 /* 按普中 A2 系列板载 LCD1602 插座配置:D0~D7 接 P0.0~P0.7。 */
 
-//函数定义：
+// 函数定义：
 /**
-  * @brief  LCD1602保守软件延时，11.0592/12MHz、12T 下每次不少于1ms
-  * @param  无
-  * @retval 无
-  */
+ * @brief  LCD1602保守软件延时，11.0592/12MHz、12T 下每次不少于1ms
+ * @param  无
+ * @retval 无
+ */
 void LCD_Delay(void)
 {
 	volatile unsigned char i, j; /* 防止 SDCC 将空循环及延时调用优化掉。 */
@@ -22,234 +30,235 @@ void LCD_Delay(void)
 	j = 239;
 	do
 	{
-		while (--j);
+		while (--j)
+			;
 	} while (--i);
 }
 
 /* 至少等待 ms 毫秒;更快的内核/时钟需要重新校准软件延时。 */
 static void LCD_WaitMs(unsigned char ms)
 {
-	while(ms--)
+	while (ms--)
 	{
 		LCD_Delay();
 	}
 }
 
 /**
-  * @brief  LCD1602写命令
-  * @param  Command 要写入的命令
-  * @retval 无
-  */
+ * @brief  LCD1602写命令
+ * @param  Command 要写入的命令
+ * @retval 无
+ */
 void LCD_WriteCommand(unsigned char Command)
 {
-	LCD_EN=0;
-	LCD_RS=0;
-	LCD_RW=0;
-	LCD_DataPort=Command;
+	LCD_EN = 0;
+	LCD_RS = 0;
+	LCD_RW = 0;
+	LCD_DataPort = Command;
 	LCD_Delay(); /* 先让控制线和数据稳定,再产生 E 脉冲。 */
-	LCD_EN=1;
+	LCD_EN = 1;
 	LCD_Delay();
-	LCD_EN=0;
+	LCD_EN = 0;
 	LCD_Delay();
-	if(Command==0x01 || Command==0x02)
+	if (Command == 0x01 || Command == 0x02)
 	{
 		LCD_WaitMs(5); /* 清屏和回原点比普通指令耗时更长。 */
 	}
 }
 
 /**
-  * @brief  LCD1602写数据
-  * @param  Data 要写入的数据
-  * @retval 无
-  */
+ * @brief  LCD1602写数据
+ * @param  Data 要写入的数据
+ * @retval 无
+ */
 void LCD_WriteData(unsigned char Data)
 {
-	LCD_EN=0;
-	LCD_RS=1;
-	LCD_RW=0;
-	LCD_DataPort=Data;
+	LCD_EN = 0;
+	LCD_RS = 1;
+	LCD_RW = 0;
+	LCD_DataPort = Data;
 	LCD_Delay();
-	LCD_EN=1;
+	LCD_EN = 1;
 	LCD_Delay();
-	LCD_EN=0;
+	LCD_EN = 0;
 	LCD_Delay();
 }
 
 /**
-  * @brief  LCD1602设置光标位置
-  * @param  Line 行位置，范围：1~2
-  * @param  Column 列位置，范围：1~16
-  * @retval 无
-  */
-void LCD_SetCursor(unsigned char Line,unsigned char Column)
+ * @brief  LCD1602设置光标位置
+ * @param  Line 行位置，范围：1~2
+ * @param  Column 列位置，范围：1~16
+ * @retval 无
+ */
+void LCD_SetCursor(unsigned char Line, unsigned char Column)
 {
-	if(Line==1)
+	if (Line == 1)
 	{
-		LCD_WriteCommand(0x80|(Column-1));
+		LCD_WriteCommand(0x80 | (Column - 1));
 	}
-	else if(Line==2)
+	else if (Line == 2)
 	{
-		LCD_WriteCommand(0x80|(Column-1+0x40));
+		LCD_WriteCommand(0x80 | (Column - 1 + 0x40));
 	}
 }
 
 /**
-  * @brief  LCD1602初始化函数
-  * @param  无
-  * @retval 无
-  */
+ * @brief  LCD1602初始化函数
+ * @param  无
+ * @retval 无
+ */
 void LCD_Init(void)
 {
-	LCD_EN=0;
-	LCD_RS=0;
-	LCD_RW=0;
-	LCD_DataPort=0x00;
-	LCD_WaitMs(50); //等待 LCD 上电稳定
+	LCD_EN = 0;
+	LCD_RS = 0;
+	LCD_RW = 0;
+	LCD_DataPort = 0x00;
+	LCD_WaitMs(50); // 等待 LCD 上电稳定
 
-	//HD44780 八位接口软件复位,也可恢复 MCU 单独复位后的接口状态。
+	// HD44780 八位接口软件复位,也可恢复 MCU 单独复位后的接口状态。
 	LCD_WriteCommand(0x30);
 	LCD_WaitMs(5);
 	LCD_WriteCommand(0x30);
 	LCD_WaitMs(1);
 	LCD_WriteCommand(0x30);
-	LCD_WriteCommand(0x38);//八位数据接口，两行显示，5*8点阵
-	LCD_WriteCommand(0x08);//初始化期间关闭显示
-	LCD_WriteCommand(0x01);//光标复位，清屏
-	LCD_WriteCommand(0x06);//数据读写操作后，光标自动加一，画面不动
-	LCD_WriteCommand(0x0c);//显示开，光标关，闪烁关
+	LCD_WriteCommand(0x38); // 八位数据接口，两行显示，5*8点阵
+	LCD_WriteCommand(0x08); // 初始化期间关闭显示
+	LCD_WriteCommand(0x01); // 光标复位，清屏
+	LCD_WriteCommand(0x06); // 数据读写操作后，光标自动加一，画面不动
+	LCD_WriteCommand(0x0c); // 显示开，光标关，闪烁关
 }
 
 /**
-  * @brief  在LCD1602指定位置上显示一个字符
-  * @param  Line 行位置，范围：1~2
-  * @param  Column 列位置，范围：1~16
-  * @param  Char 要显示的字符
-  * @retval 无
-  */
-void LCD_ShowChar(unsigned char Line,unsigned char Column,char Char)
+ * @brief  在LCD1602指定位置上显示一个字符
+ * @param  Line 行位置，范围：1~2
+ * @param  Column 列位置，范围：1~16
+ * @param  Char 要显示的字符
+ * @retval 无
+ */
+void LCD_ShowChar(unsigned char Line, unsigned char Column, char Char)
 {
-	LCD_SetCursor(Line,Column);
+	LCD_SetCursor(Line, Column);
 	LCD_WriteData(Char);
 }
 
 /**
-  * @brief  在LCD1602指定位置开始显示所给字符串
-  * @param  Line 起始行位置，范围：1~2
-  * @param  Column 起始列位置，范围：1~16
-  * @param  String 要显示的字符串
-  * @retval 无
-  */
-void LCD_ShowString(unsigned char Line,unsigned char Column,char *String)
+ * @brief  在LCD1602指定位置开始显示所给字符串
+ * @param  Line 起始行位置，范围：1~2
+ * @param  Column 起始列位置，范围：1~16
+ * @param  String 要显示的字符串
+ * @retval 无
+ */
+void LCD_ShowString(unsigned char Line, unsigned char Column, char *String)
 {
 	unsigned char i;
-	LCD_SetCursor(Line,Column);
-	for(i=0;String[i]!='\0';i++)
+	LCD_SetCursor(Line, Column);
+	for (i = 0; String[i] != '\0'; i++)
 	{
 		LCD_WriteData(String[i]);
 	}
 }
 
 /**
-  * @brief  返回值=X的Y次方
-  */
-int LCD_Pow(int X,int Y)
+ * @brief  返回值=X的Y次方
+ */
+int LCD_Pow(int X, int Y)
 {
 	unsigned char i;
-	int Result=1;
-	for(i=0;i<Y;i++)
+	int Result = 1;
+	for (i = 0; i < Y; i++)
 	{
-		Result*=X;
+		Result *= X;
 	}
 	return Result;
 }
 
 /**
-  * @brief  在LCD1602指定位置开始显示所给数字
-  * @param  Line 起始行位置，范围：1~2
-  * @param  Column 起始列位置，范围：1~16
-  * @param  Number 要显示的数字，范围：0~65535
-  * @param  Length 要显示数字的长度，范围：1~5
-  * @retval 无
-  */
-void LCD_ShowNum(unsigned char Line,unsigned char Column,unsigned int Number,unsigned char Length)
+ * @brief  在LCD1602指定位置开始显示所给数字
+ * @param  Line 起始行位置，范围：1~2
+ * @param  Column 起始列位置，范围：1~16
+ * @param  Number 要显示的数字，范围：0~65535
+ * @param  Length 要显示数字的长度，范围：1~5
+ * @retval 无
+ */
+void LCD_ShowNum(unsigned char Line, unsigned char Column, unsigned int Number, unsigned char Length)
 {
 	unsigned char i;
-	LCD_SetCursor(Line,Column);
-	for(i=Length;i>0;i--)
+	LCD_SetCursor(Line, Column);
+	for (i = Length; i > 0; i--)
 	{
-		LCD_WriteData(Number/LCD_Pow(10,i-1)%10+'0');
+		LCD_WriteData(Number / LCD_Pow(10, i - 1) % 10 + '0');
 	}
 }
 
 /**
-  * @brief  在LCD1602指定位置开始以有符号十进制显示所给数字
-  * @param  Line 起始行位置，范围：1~2
-  * @param  Column 起始列位置，范围：1~16
-  * @param  Number 要显示的数字，范围：-32768~32767
-  * @param  Length 要显示数字的长度，范围：1~5
-  * @retval 无
-  */
-void LCD_ShowSignedNum(unsigned char Line,unsigned char Column,int Number,unsigned char Length)
+ * @brief  在LCD1602指定位置开始以有符号十进制显示所给数字
+ * @param  Line 起始行位置，范围：1~2
+ * @param  Column 起始列位置，范围：1~16
+ * @param  Number 要显示的数字，范围：-32768~32767
+ * @param  Length 要显示数字的长度，范围：1~5
+ * @retval 无
+ */
+void LCD_ShowSignedNum(unsigned char Line, unsigned char Column, int Number, unsigned char Length)
 {
 	unsigned char i;
 	unsigned int Number1;
-	LCD_SetCursor(Line,Column);
-	if(Number>=0)
+	LCD_SetCursor(Line, Column);
+	if (Number >= 0)
 	{
 		LCD_WriteData('+');
-		Number1=Number;
+		Number1 = Number;
 	}
 	else
 	{
 		LCD_WriteData('-');
-		Number1=-Number;
+		Number1 = -Number;
 	}
-	for(i=Length;i>0;i--)
+	for (i = Length; i > 0; i--)
 	{
-		LCD_WriteData(Number1/LCD_Pow(10,i-1)%10+'0');
+		LCD_WriteData(Number1 / LCD_Pow(10, i - 1) % 10 + '0');
 	}
 }
 
 /**
-  * @brief  在LCD1602指定位置开始以十六进制显示所给数字
-  * @param  Line 起始行位置，范围：1~2
-  * @param  Column 起始列位置，范围：1~16
-  * @param  Number 要显示的数字，范围：0~0xFFFF
-  * @param  Length 要显示数字的长度，范围：1~4
-  * @retval 无
-  */
-void LCD_ShowHexNum(unsigned char Line,unsigned char Column,unsigned int Number,unsigned char Length)
+ * @brief  在LCD1602指定位置开始以十六进制显示所给数字
+ * @param  Line 起始行位置，范围：1~2
+ * @param  Column 起始列位置，范围：1~16
+ * @param  Number 要显示的数字，范围：0~0xFFFF
+ * @param  Length 要显示数字的长度，范围：1~4
+ * @retval 无
+ */
+void LCD_ShowHexNum(unsigned char Line, unsigned char Column, unsigned int Number, unsigned char Length)
 {
-	unsigned char i,SingleNumber;
-	LCD_SetCursor(Line,Column);
-	for(i=Length;i>0;i--)
+	unsigned char i, SingleNumber;
+	LCD_SetCursor(Line, Column);
+	for (i = Length; i > 0; i--)
 	{
-		SingleNumber=Number/LCD_Pow(16,i-1)%16;
-		if(SingleNumber<10)
+		SingleNumber = Number / LCD_Pow(16, i - 1) % 16;
+		if (SingleNumber < 10)
 		{
-			LCD_WriteData(SingleNumber+'0');
+			LCD_WriteData(SingleNumber + '0');
 		}
 		else
 		{
-			LCD_WriteData(SingleNumber-10+'A');
+			LCD_WriteData(SingleNumber - 10 + 'A');
 		}
 	}
 }
 
 /**
-  * @brief  在LCD1602指定位置开始以二进制显示所给数字
-  * @param  Line 起始行位置，范围：1~2
-  * @param  Column 起始列位置，范围：1~16
-  * @param  Number 要显示的数字，范围：0~1111 1111 1111 1111
-  * @param  Length 要显示数字的长度，范围：1~16
-  * @retval 无
-  */
-void LCD_ShowBinNum(unsigned char Line,unsigned char Column,unsigned int Number,unsigned char Length)
+ * @brief  在LCD1602指定位置开始以二进制显示所给数字
+ * @param  Line 起始行位置，范围：1~2
+ * @param  Column 起始列位置，范围：1~16
+ * @param  Number 要显示的数字，范围：0~1111 1111 1111 1111
+ * @param  Length 要显示数字的长度，范围：1~16
+ * @retval 无
+ */
+void LCD_ShowBinNum(unsigned char Line, unsigned char Column, unsigned int Number, unsigned char Length)
 {
 	unsigned char i;
-	LCD_SetCursor(Line,Column);
-	for(i=Length;i>0;i--)
+	LCD_SetCursor(Line, Column);
+	for (i = Length; i > 0; i--)
 	{
-		LCD_WriteData(Number/LCD_Pow(2,i-1)%2+'0');
+		LCD_WriteData(Number / LCD_Pow(2, i - 1) % 2 + '0');
 	}
 }

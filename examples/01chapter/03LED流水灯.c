@@ -1,12 +1,4 @@
 /*
- * :file description:
- * :name: /project51/main.c
- * :author: 张德志
- * :date created: 2026-09-19 15:18:26
- * :last editor: 张德志
- * :date last edited: 2026-10-09 07:11:26
- */
-/*
  * main.c — LED 呼吸灯(软件 PWM:渐亮 + 渐暗)
  *
  * 目标芯片: STC89C52RC, 11.0592 / 12 MHz, 12T 模式。

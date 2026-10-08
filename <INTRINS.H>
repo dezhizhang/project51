@@ -1,0 +1,13 @@
+/*
+ * <INTRINS.H> — 桥接文件
+ * main.c 里写的是 #include "<INTRINS.H>"(引号+尖括号双包),
+ * 预处理器会把文件名按字面处理,去找一个名字就叫 <INTRINS.H> 的文件,
+ * 本文件就是这个名字,转发到项目里的 intrins.h(Keil C51 兼容函数)。
+ *
+ * 注意:文件名带 < > 在 Windows/Keil 下非法,仅 macOS/Linux 可用。
+ * 若项目迁移到 Keil/Windows,请把 main.c 第 17 行改成 #include <INTRINS.H>。
+ */
+#ifndef __INTRINS_ANGLE_BRIDGE__
+#define __INTRINS_ANGLE_BRIDGE__
+#include "intrins.h"
+#endif

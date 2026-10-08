@@ -4,7 +4,7 @@
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-10-09 07:11:26
+ * :date last edited: 2026-10-09 07:25:47
  */
 /*
  * main.c — LED 呼吸灯(软件 PWM:渐亮 + 渐暗)
@@ -16,24 +16,23 @@
 #include <REGX52.H>
 #include "<INTRINS.H>"
 
-void Delay500ms()
+void Delayms(unsigned int xms)
 {
-    unsigned char i, j, k;
-
-    _nop_();
-
-    i = 4;
-    j = 205;
-    k = 187;
-
-    do
+    unsigned char i, j;
+    while (xms)
     {
+        i = 2;
+        j = 239;
+        _nop_();
         do
         {
-            while (--k)
+            while (--j)
                 ;
-        } while (--j);
-    } while (--i);
+
+        } while (--i);
+
+        xms--;
+    }
 }
 
 void main()
@@ -41,17 +40,20 @@ void main()
     while (1)
     {
         P2 = 0xFE;
-        Delay500ms();
+        Delayms(500);
         P2 = 0xFD;
-        Delay500ms();
+        Delayms(500);
         P2 = 0xFB;
-        Delay500ms();
+        Delayms(500);
         P2 = 0xF7;
-        Delay500ms();
+        Delayms(500);
         P2 = 0xEF;
-        Delay500ms();
+        Delayms(500);
         P2 = 0xDF;
-        Delay500ms();
+        Delayms(500);
         P2 = 0xBF;
+        Delayms(500);
+        P2 = 0x7F;
+        Delayms(500);
     }
 }

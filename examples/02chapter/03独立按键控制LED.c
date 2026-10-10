@@ -1,10 +1,10 @@
 /*
  * :file description:
- * :name: /project51/main.c
+ * :name: /project51/examples/02chapter/03独立按键控制LED.c
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-10-10 21:41:29
+ * :date last edited: 2026-10-10 21:21:50
  */
 /*
  * main.c — LED 呼吸灯(软件 PWM:渐亮 + 渐暗)
@@ -44,12 +44,8 @@ void main()
             while (P3_1 == 0)
                 ;
             Delay(20);
-            if (LedNum >= 8)
-            {
-                LedNum = 0;
-            }
-            P2 = ~(0x01 << LedNum);
             LedNum++;
+            P2 = ~LedNum;
         }
     }
 }

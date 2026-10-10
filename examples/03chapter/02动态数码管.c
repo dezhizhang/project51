@@ -1,10 +1,10 @@
 /*
  * :file description:
- * :name: /project51/main.c
+ * :name: /project51/examples/03chapter/02动态数码管.c
  * :author: 张德志
  * :date created: 2026-09-19 15:18:26
  * :last editor: 张德志
- * :date last edited: 2026-10-10 22:54:17
+ * :date last edited: 2026-10-10 22:55:38
  */
 /*
  * main.c — LED 呼吸灯(软件 PWM:渐亮 + 渐暗)
